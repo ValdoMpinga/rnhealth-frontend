@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap");
+@import "../main.css";
+
+footer {
+  width: 100%;
+  min-height: 220px;
+  background-color: var(--rnhealthGrapePurple);
+}
+
+p {
+    color: var(--rnhealthWhite);
+}
+
+.line {
+    color: var(--rnhealthWhite);
+}
+
+.contactsParagraph{
+    font-size: 24px;
+}

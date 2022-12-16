@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo&family=Source+Sans+Pro:wght@200&display=swap');
+
+*{
+  font-family: 'Arimo', sans-serif;
+}
+
+:root {
+  --rnhealthLightPlum: #a54a96;
+  --rnhealthGrapePurple: #591F50;
+  --rnhealthBlack: #040404;
+  --rnhealthDavyGrey: #5c545c;
+  --rnhealthLiver: #4c4c4c;
+  --rnhealthWhite: #ffffff;
+  --rnhealthSilverChalice: #ababab;
+}
+

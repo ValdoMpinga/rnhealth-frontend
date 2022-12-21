@@ -10,13 +10,14 @@ function Footer()
 {
     return (
         <footer
-            className=" text-center text-lg-start fixed-bottom ">
+            className="text-center text-lg-start"
+        >
             <Container
                 className='container mt-4'>
                 <Row
                     className='row text-center g-4' >
                     <Col
-                        className='col-lg mx-auto'>
+                        className=' '>
                         <img
                             src={aditlabLogo}
                             alt='Aditlab Logo'
@@ -24,7 +25,7 @@ function Footer()
                     </Col>
                     <Col
                         className='col-lg mx-auto'>
-                       
+
                         <img
                             src={ipvcLogo}
                             alt='IPVC Logo'
@@ -40,7 +41,7 @@ function Footer()
                         </div>
                     </Col>
                 </Row>
-                <hr className='line'/>
+                <hr className='line' />
                 <Row
                     className='text-center'>
                     <p className='copyright' >Copyright © 2023 ADiT-LAB. All Rights Reserved.</p>

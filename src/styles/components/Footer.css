@@ -2,19 +2,25 @@
 @import "../main.css";
 
 footer {
+  margin-top: auto;
   width: 100%;
   min-height: 220px;
   background-color: var(--rnhealthGrapePurple);
 }
 
 p {
-    color: var(--rnhealthWhite);
+  color: var(--rnhealthWhite);
 }
 
 .line {
-    color: var(--rnhealthWhite);
+  color: var(--rnhealthWhite);
 }
 
-.contactsParagraph{
-    font-size: 24px;
+.contacts {
+  font-size: 24px;
+  color: var(--rnhealthWhite);
+}
+
+.copyright {
+  color: var(--rnhealthWhite);
 }

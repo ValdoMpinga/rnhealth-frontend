@@ -2,7 +2,7 @@ import { useRef } from "react";
 import '../styles/components/Navbar.css'
 import { FaBars, FaTimes } from "react-icons/fa";
 import rnhealthLogo from '../assets/logos/rnhealth_logo.svg'
-
+import { Link } from 'react-router-dom'
 function Navbar()
 {
 
@@ -22,8 +22,10 @@ function Navbar()
                 width="120"
             />
             <nav ref={navRef}>
-                <a href="/#">Home</a>
-                <a href="/#">Profile</a>
+                {/* can use navlink in the future */}
+                <Link to="/">Home</Link>
+                <Link to="/profile">Profile</Link>
+                <Link to="/sensors/:id">Sensors</Link>
                 <a href="/#">Contacts</a>
                 <a href="/#">About</a>
                 <button

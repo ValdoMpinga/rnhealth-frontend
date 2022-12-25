@@ -6,6 +6,7 @@ function Button({ color, name, width, height })
   return (
     <>
       <button
+       
         style={{
           backgroundColor: color,
           width: width,

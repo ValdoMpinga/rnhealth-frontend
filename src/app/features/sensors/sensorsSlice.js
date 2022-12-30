@@ -11,7 +11,16 @@ const initialState =
         hour4: false,
         hour5: false,
         hour6: false,
-    }
+    },
+    algorithmsNames : [
+        { name: 'Algorithms' },
+        { name: 'LSTM' },
+
+    ],
+    forecasts: [],
+    isFetchingForecasts: false,
+    isLoadingSpinnerOn : false,
+
 }
 
 export const sensorsSlice = createSlice(
@@ -26,11 +35,24 @@ export const sensorsSlice = createSlice(
             setHoursToForecast: (state,action) =>
             {
                 state.hoursToForecast = action.payload
-            }
+            },
+            setForecasts: (state,action) =>
+            {
+                state.forecasts = action.payload
+            },
+            setIsFetchingForecasts: (state,action) =>
+            {
+                state.isFetchingForecasts = action.payload
+            },
+            setIsLoadingSpinnerOn: (state,action) =>
+            {
+                state.isLoadingSpinnerOn = action.payload
+            },
+            
 
         },
     }
 )
 
-export const { setIsSensorSelected, setHoursToForecast } = sensorsSlice.actions
+export const { setIsSensorSelected, setHoursToForecast, setForecasts, setIsFetchingForecasts, setIsLoadingSpinnerOn } = sensorsSlice.actions
 export default sensorsSlice.reducer

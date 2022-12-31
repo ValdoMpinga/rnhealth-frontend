@@ -1,7 +1,7 @@
 import React, { useState, CSSProperties } from 'react'
 import { useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+// import Footer from '../components/Footer'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -19,7 +19,6 @@ import apis from '../utils/Apis';
 import { RNHEALT_LIVER, NINE_HOURS_IN_MILISECOUNDS, RNHEALT_GRAPE_PURPLE } from '../utils/Constants';
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import { RotateLoader } from 'react-spinners';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -114,15 +113,7 @@ function Sensors()
                 }
             })
         }
-
-
-
-
-
     }
-
-
-
 
     return (
         <div

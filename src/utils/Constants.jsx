@@ -7,8 +7,8 @@ export const RNHEALT_LIVER = '#4c4c4c'
 export const RNHEALT_WHITE = '#ffffff'
 export const RNHEALT_SILVER_CHALICE = '#ababab'
 
-//Time
-export const THIRTEEN_HOURS_IN_MILISECOUNDS = 46800000
+//Time 46800000 
+export const TWENTY_HOURS_IN_MILISECOUNDS = 72000000
 export const TEST_DATE_IN_MILISECOUNDS = 1673290800000
 
 

@@ -1,99 +1,37 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import CanvasJSReact from '../../assets/canvasJs/canvasjs.react'
+import { RNHEALT_LIVER,RNHEALT_DAVE_GRAY, RNHEALT_GRAPE_PURPLE,RNHEALTH_LIGHT_PLUM } from '../../utils/Constants';
 
-var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 function ForecastChart({ lstmForecats, biLstmForecasts })
 {
+    const {  displayLstmForecasts, displayBiLstmForecasts } = useSelector((state) => state.sensors)
+
     let lstmForecastsArr = []
     let lstmForecastsErrors = []
 
     let biLstmForecastsArr = []
     let biLstmForecastsErros = []
 
-    let lstmMeasures = [
-        {
-            'hour': 1,
-            'LSTM_Forecast': 100,
-            'error': 33.95,
-
-        },
-        {
-            'hour': 2,
-            'LSTM_Forecast': 120,
-            'error': 55.63,
-        },
-        {
-            'hour': 3,
-            'LSTM_Forecast': 130,
-            'error': 68.11,
-        },
-        {
-            'hour': 4,
-            'LSTM_Forecast': 150,
-            'error': 84.85,
-        },
-        {
-            'hour': 5,
-            'LSTM_Forecast': 170,
-            'error': 96.67,
-        },
-        {
-            'hour': 6,
-            'LSTM_Forecast': 140,
-            'error': 107.24,
-        }]
-
-    let biLstmMeasures = [
-        {
-            'hour': 1,
-            'biLSTM_Forecast': 200,
-            'error': 33.95,
-
-        },
-        {
-            'hour': 2,
-            'biLSTM_Forecast': 220,
-            'error': 55.63,
-        },
-        {
-            'hour': 3,
-            'biLSTM_Forecast': 230,
-            'error': 68.11,
-        },
-        {
-            'hour': 4,
-            'biLSTM_Forecast': 250,
-            'error': 84.85,
-        },
-        {
-            'hour': 5,
-            'biLSTM_Forecast': 270,
-            'error': 96.67,
-        },
-        {
-            'hour': 6,
-            'biLSTM_Forecast': 240,
-            'error': 107.24,
-        }]
-
-
     console.log('inside chart component');
 
     lstmForecats.forEach((measure, index) =>
     {
-        lstmForecastsArr.push({ y: measure.LSTM_Forecast })
-        lstmForecastsErrors.push({ y: [measure.LSTM_Forecast - measure.error, measure.LSTM_Forecast + measure.error]})
+        lstmForecastsArr.push({ y: measure.LSTM_Forecast, label: `${index + 1} Hour ahead` })
+        lstmForecastsErrors.push({y:[ (measure.LSTM_Forecast - measure.error), ( measure.LSTM_Forecast + measure.error )]})
     })
 
     biLstmForecasts.forEach((measure,index) =>
     {
-        biLstmForecastsArr.push({ y: measure.biLSTM_Forecast })
-        biLstmForecastsErros.push({ y: [measure.biLSTM_Forecast - measure.error, measure.biLSTM_Forecast + measure.error] })
+        biLstmForecastsArr.push({ y: measure.biLSTM_Forecast  })
+        biLstmForecastsErros.push({  y: [measure.biLSTM_Forecast - measure.error, measure.biLSTM_Forecast + measure.error] })
 
     })
 
+    console.log("bellow");
+    console.log(lstmForecastsErrors);
 
     const options = {
         animationEnabled: true,
@@ -114,62 +52,53 @@ function ForecastChart({ lstmForecats, biLstmForecasts })
             shared: true
         },
         data: [
-
             {
-                type: "line",
+
+                type: "spline",
+                color: RNHEALT_GRAPE_PURPLE,
                 name: "LSTM Forecast",
                 showInLegend: true,
-                toolTipContent: "<b>{label}</b><br><span style=\"color:#4F81BC\">{name}</span>: {y} Bq/m³",
-                dataPoints: lstmForecastsArr
+                toolTipContent: "<b>{label}</b><br><span style=\"color:#591f50\">{name}</span>: {y} Bq/m³",
+                dataPoints: lstmForecastsArr,
+                visible: displayLstmForecasts,
+                lineThickness: 10,
+
             },
             {
-                type: "line",
-                name: "Bi LSTM Forecast",
-                showInLegend: true,
-                toolTipContent: "<b>{label}</b><br><span style=\"color:#a54a96\">{name}</span>: {y} Bq/m³",
-                dataPoints: biLstmForecastsArr
-            },
-            {
-                type: "error",
+                type: "rangeSplineArea",
+                color: RNHEALT_DAVE_GRAY,
                 name: "LSTM Error Range",
                 showInLegend: true,
-                toolTipContent: "<span style=\"color:#C0504E\">{name}</span>: {y[0]} - {y[1]} Bq/m³",
-                dataPoints: lstmForecastsErrors
-                //[
-                //     { y: [18, 20] },
-                //     { y: [14, 18] },
-                //     { y: [15, 17] },
-                //     { y: [15, 17]},
-                //     { y: [14, 16] },
-                //     { y: [12, 14] },
-                //     { y: [13, 15], label: "Jul" },
-                //     { y: [12, 14], label: "Aug" },
-                //     { y: [14, 16], label: "Sep" },
-                //     { y: [14, 16], label: "Oct" },
-                //     { y: [16, 18], label: "Nov" },
-                //     { y: [16, 19], label: "Dec" }
-                // ]
+                toolTipContent: "<span style=\"color:#5c545c\">{name} </span>: {y[0]} - {y[1]} Bq/m³",
+                dataPoints: lstmForecastsErrors,
+                visible: displayLstmForecasts,
+                fillOpacity: .3,
+
+            },
+
+            {
+                type: "spline",
+                color: RNHEALTH_LIGHT_PLUM,
+                name: "Bi LSTM Forecast",
+                showInLegend: true,
+                toolTipContent: "<b>{label}</b><span style=\"color:#a54a96\">{name} </span>: {y} Bq/m³<br>",
+                dataPoints: biLstmForecastsArr,
+                visible: displayBiLstmForecasts,
+                lineThickness: 10,
+
+
             },
             {
-                type: "error",
+                type: "rangeSplineArea",
+                color: RNHEALT_LIVER,
                 name: " BI LSTM Error Range",
                 showInLegend: true,
-                toolTipContent: "<span style=\"color:#C0504E\">{name}</span>: {y[0]} - {y[1]} Bq/m³",
-                dataPoints: biLstmForecastsErros
-                //     [
-                //     { y: [28, 32], label: "1 Hour" },
-                //     { y: [24, 28], label: "2 Hour" },
-                //     { y: [25, 27], label: "3 Hour" },
-                //     { y: [25, 27], label: "4 Hour" },
-                //     { y: [24, 26], label: "5 Hour" },
-                //     { y: [22, 24], label: "6 Hour" },
-                //     { y: [13, 15], label: "Jul" },
-                //     { y: [12, 14], label: "Aug" },
-                //     { y: [14, 16], label: "Sep" },
-                //     { y: [14, 16], label: "Oct" },
-                //     { y: [16, 18], label: "Nov" },
-                //     { y: [16, 19], label: "Dec" }
-                // ]
+                toolTipContent: "<span style=\"color:#ababab\">{name}</span>: {y[0]} - {y[1]} Bq/m³",
+                dataPoints: biLstmForecastsErros,
+                visible: displayBiLstmForecasts,
+                fillOpacity: .3,
+
+
             }
         ]
     }

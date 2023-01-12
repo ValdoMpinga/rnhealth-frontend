@@ -69,5 +69,5 @@ export const sensorsSlice = createSlice(
     }
 )
 
-export const { setIsSensorSelected, setHoursToForecast, setLstmForecasts, setIsFetchingForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts, setDisplayLstmForecasts, setDisplayBiLstmForecasts } = sensorsSlice.actions
+export const { setIsSensorSelected, setHoursToForecast, setLstmForecasts, setIsFetchingForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts } = sensorsSlice.actions
 export default sensorsSlice.reducer

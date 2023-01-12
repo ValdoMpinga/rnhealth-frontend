@@ -10,13 +10,13 @@ import '../styles/pages/sensors.css'
 import '../styles/components/sensors/selectBox.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useSelector, useDispatch } from 'react-redux'
-import { setHoursToForecast, setIsFetchingForecasts, setLstmForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts } from '../app/features/sensors/sensorsSlice'
+import { setHoursToForecast, setIsFetchingForecasts, setLstmForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts, setDisplayLstmForecasts, setDisplayBiLstmForecasts } from '../app/features/sensors/sensorsSlice'
 import SelectBox from '../components/sensors/SelectBox';
 import Button from '../components/Button';
 import ForecastsTable from '../components/sensors/ForecastsTable';
 import axios from 'axios';
 import apis from '../utils/Apis';
-import { RNHEALT_LIVER, THIRTEEN_HOURS_IN_MILISECOUNDS, TEST_DATE_IN_MILISECOUNDS, RNHEALT_GRAPE_PURPLE } from '../utils/Constants';
+import { RNHEALT_LIVER, TWENTY_HOURS_IN_MILISECOUNDS, TEST_DATE_IN_MILISECOUNDS, RNHEALT_GRAPE_PURPLE } from '../utils/Constants';
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import { RotateLoader } from 'react-spinners';
 import CanvasJSReact from '../assets/canvasJs/canvasjs.react'
@@ -38,7 +38,7 @@ function Sensors()
 
     // const { id } = useParams()
     const shouldGetForecast = useRef(true)
-    const { hoursToForecast, algorithmsNames, lstmForecasts, biLstmForecasts, isFetchingForecasts, isLoadingSpinnerOn } = useSelector((state) => state.sensors)
+    const { hoursToForecast, displayLstmForecasts, displayBiLstmForecasts, lstmForecasts, biLstmForecasts, isFetchingForecasts, isLoadingSpinnerOn } = useSelector((state) => state.sensors)
     const dispatch = useDispatch()
 
     const getForecasts = () =>
@@ -62,7 +62,7 @@ function Sensors()
             {
 
                 let parsedCurrentDate = Date.now().toString()
-                let parsedStartDate = (parseInt(Date.now()) - THIRTEEN_HOURS_IN_MILISECOUNDS).toString()
+                let parsedStartDate = (parseInt(Date.now()) - TWENTY_HOURS_IN_MILISECOUNDS).toString()
                 // let parsedCurrentDate = TEST_DATE_IN_MILISECOUNDS
                 // let parsedStartDate = TEST_DATE_IN_MILISECOUNDS - TWELVE_HOURS_IN_MILISECOUNDS
 
@@ -190,144 +190,49 @@ function Sensors()
                                         loading={isLoadingSpinnerOn}
                                         size={20}
                                     /> :
-                                    <ForecastChart
-                                        lstmForecats={lstmForecasts}
-                                        biLstmForecasts={biLstmForecasts}
-                                    />
+                                    <>
+
+                                        <Row className="">
+                                            <Col>  <label >
+                                               LSTM:
+                                                <input
+                                                    checked={displayLstmForecasts}
+                                                    onChange={() =>
+                                                    {
+                                                        dispatch(setDisplayLstmForecasts(!displayLstmForecasts))
+                                                    }
+                                                    }
+                                                    className='checkbox'
+                                                    type="checkbox"
+                                                    name="1h" />
+                                            </label></Col>
+                                            <Col>  <label >
+                                                Bi LSTM:
+                                                <input
+                                                    checked={displayBiLstmForecasts}
+                                                    onChange={() =>
+                                                    {
+                                                        dispatch(setDisplayBiLstmForecasts(!displayBiLstmForecasts))
+                                                    }
+                                                    }
+                                                    className='checkbox'
+                                                    type="checkbox"
+                                                    name="1h" />
+                                            </label></Col>
+
+
+                                        </Row>
+
+                                        <ForecastChart
+                                            lstmForecats={lstmForecasts}
+                                            biLstmForecasts={biLstmForecasts}
+                                        />
+
+                                    </>
 
                             }
 
                         </Col>
-
-
-
-                        {/* <Col className='forecast-config-column '>
-                            <h3>Forecasting hours</h3>
-                            <form onSubmit={handleForecastButton}>
-                                <div className='mt-5'>
-                                    <label >
-                                        1 hour forecast:
-                                        <input
-                                            checked={hoursToForecast.hour1}
-                                            onChange={() =>
-                                            {
-                                                dispatch(setHoursToForecast({ ...hoursToForecast, hour1: !hoursToForecast.hour1 }))
-                                            }
-                                            }
-                                            className='checkbox'
-                                            type="checkbox"
-                                            name="1h" />
-                                    </label>
-                                    <br />
-
-                                    <label>
-                                        2 hour forecast:
-                                        <input
-                                            checked={hoursToForecast.hour2}
-                                            onChange={() =>
-                                            {
-                                                dispatch(setHoursToForecast({ ...hoursToForecast, hour2: !hoursToForecast.hour2 }))
-                                            }
-                                            }
-                                            className='checkbox'
-                                            type="checkbox"
-                                            name="2h" />
-                                    </label>
-                                    <br />
-
-                                    <label>
-                                        3 hour forecast:
-                                        <input
-                                            checked={hoursToForecast.hour3}
-                                            onChange={() =>
-                                            {
-                                                dispatch(setHoursToForecast({ ...hoursToForecast, hour3: !hoursToForecast.hour3 }))
-                                            }
-                                            }
-                                            className='checkbox'
-                                            type="checkbox"
-                                            name="3h" />
-                                    </label>
-                                    <br />
-
-                                    <label>
-                                        4 hour forecast:
-                                        <input className='checkbox'
-                                            checked={hoursToForecast.hour4}
-                                            onChange={() =>
-                                            {
-                                                dispatch(setHoursToForecast({ ...hoursToForecast, hour4: !hoursToForecast.hour4 }))
-                                            }
-                                            }
-                                            type="checkbox"
-                                            name="4h" />
-                                    </label>
-                                    <br />
-
-                                    <label>
-                                        5 hour forecast:
-                                        <input
-                                            checked={hoursToForecast.hour5}
-                                            onChange={() =>
-                                            {
-                                                dispatch(setHoursToForecast({ ...hoursToForecast, hour5: !hoursToForecast.hour5 }))
-                                            }
-                                            }
-                                            className='checkbox'
-                                            type="checkbox"
-                                            name="5h" />
-                                    </label>
-                                    <br />
-
-                                    <label>
-                                        6 hour forecast:
-                                        <input className='checkbox'
-                                            checked={hoursToForecast.hour6}
-                                            onChange={() =>
-                                            {
-                                                dispatch(setHoursToForecast({ ...hoursToForecast, hour6: !hoursToForecast.hour6 }))
-                                            }
-                                            }
-                                            type="checkbox"
-                                            name="6h" />
-                                    </label>
-                                    <br />
-
-                                    <Button
-                                        isDesabled={isFetchingForecasts}
-                                        name='Forecast'
-                                        color={RNHEALT_LIVER}
-                                        width='100px'
-                                        height='40px'
-                                    />
-                                </div>
-                            </form>
-
-                        </Col>
-                        <Col className='forecast-display-column '>
-                            <h3>Forecasts will be displayed here!</h3>
-
-                            {
-                                isFetchingForecasts ?
-                                    <div>
-                                        <RotateLoader
-                                            color={RNHEALT_GRAPE_PURPLE}
-                                            loading={isLoadingSpinnerOn}
-                                            size={20}
-                                        />
-                                    </div> :
-                                    forecasts.length === 0 ?
-
-                                        <OnlinePredictionIcon
-                                            sx={{ fontSize: 50 }}
-                                        /> :
-                                        <ForecastsTable
-                                            algorithms={algorithmsNames}
-                                            measurements={forecasts}
-                                        />
-                            }
-                        </Col> */}
-
 
                     </Row>
                 </Container>

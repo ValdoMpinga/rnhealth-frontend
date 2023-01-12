@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -10,19 +10,19 @@ import '../styles/pages/sensors.css'
 import '../styles/components/sensors/selectBox.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useSelector, useDispatch } from 'react-redux'
-import { setHoursToForecast, setIsFetchingForecasts, setForecasts, setIsLoadingSpinnerOn } from '../app/features/sensors/sensorsSlice'
+import { setHoursToForecast, setIsFetchingForecasts, setLstmForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts } from '../app/features/sensors/sensorsSlice'
 import SelectBox from '../components/sensors/SelectBox';
 import Button from '../components/Button';
 import ForecastsTable from '../components/sensors/ForecastsTable';
 import axios from 'axios';
 import apis from '../utils/Apis';
-import { RNHEALT_LIVER, NINE_HOURS_IN_MILISECOUNDS, RNHEALT_GRAPE_PURPLE } from '../utils/Constants';
+import { RNHEALT_LIVER, THIRTEEN_HOURS_IN_MILISECOUNDS, TEST_DATE_IN_MILISECOUNDS, RNHEALT_GRAPE_PURPLE } from '../utils/Constants';
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import { RotateLoader } from 'react-spinners';
-
+import CanvasJSReact from '../assets/canvasJs/canvasjs.react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import ForecastChart from '../components/sensors/ForecastChart';
 const backendApi = axios.create({
     baseURL: apis.backendApiUrl
 })
@@ -31,97 +31,115 @@ const rnMonitorApi = axios.create({
 })
 
 
+
 function Sensors()
 {
+
+
     // const { id } = useParams()
-    const { hoursToForecast, algorithmsNames, forecasts, isFetchingForecasts, isLoadingSpinnerOn } = useSelector((state) => state.sensors)
+    const shouldGetForecast = useRef(true)
+    const { hoursToForecast, algorithmsNames, lstmForecasts, biLstmForecasts, isFetchingForecasts, isLoadingSpinnerOn } = useSelector((state) => state.sensors)
     const dispatch = useDispatch()
 
-    const handleForecastButton = (e) =>
+    const getForecasts = () =>
     {
-        e.preventDefault();
 
-        const areAllCheckboxesFalse = Object.values(hoursToForecast).every(
-            value => value === false
-        )
+        // dispatch(setIsFetchingForecasts(true))
+        // dispatch(setIsLoadingSpinnerOn(true))
 
-        if (areAllCheckboxesFalse)
-        {
-            toast("Please select at least one hour to forecast")
-
-        } else
-        {
-            dispatch(setIsFetchingForecasts(true))
-            dispatch(setIsLoadingSpinnerOn(true))
-
-            backendApi.post('/forecast/hours',
-                {
-                    "hour1": hoursToForecast.hour1,
-                    "hour2": hoursToForecast.hour2,
-                    "hour3": hoursToForecast.hour3,
-                    "hour4": hoursToForecast.hour4,
-                    "hour5": hoursToForecast.hour5,
-                    "hour6": hoursToForecast.hour6,
-                }
-            ).then((res) =>
+        backendApi.post('/forecast/hours',
             {
-                if (res.status === 200)
-                {
-                    let parsedCurrentDate = Date.now().toString()
-                    let parsedStartDate = (parseInt(Date.now()) - NINE_HOURS_IN_MILISECOUNDS).toString()
+                "hour1": hoursToForecast.hour1,
+                "hour2": hoursToForecast.hour2,
+                "hour3": hoursToForecast.hour3,
+                "hour4": hoursToForecast.hour4,
+                "hour5": hoursToForecast.hour5,
+                "hour6": hoursToForecast.hour6,
+            }
+        ).then((res) =>
+        {
+            if (res.status === 200)
+            {
 
-                    rnMonitorApi.post('/measurement/get',
+                let parsedCurrentDate = Date.now().toString()
+                let parsedStartDate = (parseInt(Date.now()) - THIRTEEN_HOURS_IN_MILISECOUNDS).toString()
+                // let parsedCurrentDate = TEST_DATE_IN_MILISECOUNDS
+                // let parsedStartDate = TEST_DATE_IN_MILISECOUNDS - TWELVE_HOURS_IN_MILISECOUNDS
 
+                rnMonitorApi.post('/measurement/get',
+
+                    {
+
+                        "dateStart": parsedStartDate,
+                        "dateEnd": parsedCurrentDate,
+                        "groupBy": "1h"
+                    },
+                    {
+                        headers: {
+                            'Authorization': process.env.REACT_APP_RN_MONITOR_KEY,
+                            'Content-Type': 'application/json'
+                        }
+                    },
+                )
+                    .then((response) =>
+                    {
+
+                        let filteredData = response.data.filter((measurement) =>
                         {
-
-                            "dateStart": parsedStartDate,
-                            "dateEnd": parsedCurrentDate,
-                            "groupBy": "1h"
-                        },
-                        {
-                            headers: {
-                                'Authorization': process.env.REACT_APP_RN_MONITOR_KEY,
-                                'Content-Type': 'application/json'
-                            }
-                        },
-                    )
-                        .then((response) =>
-                        {
-                            let filteredData = response.data.filter((measurement) =>
-                            {
-                                return measurement.sensor_id == 'D001'
-                            }
-                            )
-
-                            filteredData.forEach(function (measure)
-                            {
-                                delete measure.time
-                                delete measure.sensor_id
-                            });
-
-                            backendApi.post('/forecast',
-                                filteredData
-                                ,
-                            ).then((response) =>
-                            {
-                                dispatch(setForecasts(response.data))
-                                dispatch(setIsFetchingForecasts(false))
-                                dispatch(setIsLoadingSpinnerOn(false))
-                            }
-                            )
+                            return measurement.sensor_id == 'D001'
                         }
                         )
-                }
-            })
-        }
+
+                        console.log(parsedStartDate);
+                        console.log(parsedCurrentDate);
+                        console.log(filteredData);
+
+                        filteredData.forEach(function (measure)
+                        {
+                            delete measure.time
+                            delete measure.sensor_id
+                        });
+
+                        backendApi.post('/forecast/lstm',
+                            filteredData
+                            ,
+                        ).then((response) =>
+                        {
+                            dispatch(setLstmForecasts(response.data))
+
+                            console.log(response.data);
+                        }
+                        ).then(() =>
+                        {
+                            backendApi.post('/forecast/bi-lstm',
+                                filteredData,
+                            ).then((response) =>
+                            {
+                                dispatch(setBiLstmForecasts(response.data))
+                                dispatch(setIsLoadingSpinnerOn(false))
+                                dispatch(setIsFetchingForecasts(false))
+
+                                console.log(response.data);
+                            }
+                            )
+                        })
 
 
-
-
-
+                    }
+                    )
+            }
+        })
     }
 
+    useEffect(() =>
+    {
+        if (shouldGetForecast.current)
+        {
+            shouldGetForecast.current = false
+            getForecasts()
+        }
 
+    }, [])
 
 
     return (
@@ -145,18 +163,45 @@ function Sensors()
                         pauseOnHover
                         theme="dark"
                     />
+
+
                     <Row className='row text-center'>
                         <h2 className='title'>
                             Sensors
                         </h2>
-                    </Row>
-                    <Row className='mt-5 d-flex justify-content-center'>
-                        <SelectBox className='' />
+
+
+
+
                     </Row>
 
-                    <Row className='col-lg mx-auto mt-5  text-center gx-4'
-                    >
-                        <Col className='forecast-config-column '>
+
+                    {/* <Row className='mt-5 d-flex justify-content-center'>
+                        <SelectBox className='' />
+                    </Row> */}
+
+                    <Row className='col-lg mx-auto mt-5  text-center gx-4'>
+
+                        <Col>
+                            {
+                                isFetchingForecasts ?
+                                    <RotateLoader
+                                        color={RNHEALT_GRAPE_PURPLE}
+                                        loading={isLoadingSpinnerOn}
+                                        size={20}
+                                    /> :
+                                    <ForecastChart
+                                        lstmForecats={lstmForecasts}
+                                        biLstmForecasts={biLstmForecasts}
+                                    />
+
+                            }
+
+                        </Col>
+
+
+
+                        {/* <Col className='forecast-config-column '>
                             <h3>Forecasting hours</h3>
                             <form onSubmit={handleForecastButton}>
                                 <div className='mt-5'>
@@ -281,7 +326,9 @@ function Sensors()
                                             measurements={forecasts}
                                         />
                             }
-                        </Col>
+                        </Col> */}
+
+
                     </Row>
                 </Container>
             </main>

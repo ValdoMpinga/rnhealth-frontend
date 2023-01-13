@@ -37,10 +37,22 @@ function Sensors()
 
 
     // const { id } = useParams()
+    const [lastFiveMeasurements, setLastFiveMeasurements] = useState([])
     const shouldGetForecast = useRef(true)
     const { hoursToForecast, displayLstmForecasts, displayBiLstmForecasts, lstmForecasts, biLstmForecasts, isFetchingForecasts, isLoadingSpinnerOn } = useSelector((state) => state.sensors)
     const dispatch = useDispatch()
 
+    function getLastFiveDataAsc(data)
+    {
+        let newData = data.slice(-5);
+        newData.sort(function (a, b)
+        {
+            return new Date(a.time) - new Date(b.time);
+        });
+
+        let newDataWithTime = newData.map(d => ({ time: d.time, Rn: d.Rn }))
+        return newDataWithTime;
+    }
     const getForecasts = () =>
     {
 
@@ -92,13 +104,20 @@ function Sensors()
 
                         console.log(parsedStartDate);
                         console.log(parsedCurrentDate);
-                        console.log(filteredData);
 
                         filteredData.forEach(function (measure)
                         {
-                            delete measure.time
+                            // delete measure.time
                             delete measure.sensor_id
                         });
+
+                                // let parsedTime = new Date(filteredData[0].time)
+                        // console.log(typeof(parsedTime))
+                        // console.log(parsedTime.getHours())
+                        // console.log("bellow");
+                        // console.log(getLastFiveDataAsc(filteredData));
+                        setLastFiveMeasurements(getLastFiveDataAsc(filteredData))
+
 
                         backendApi.post('/forecast/lstm',
                             filteredData
@@ -194,7 +213,7 @@ function Sensors()
 
                                         <Row className="">
                                             <Col>  <label >
-                                               LSTM:
+                                                LSTM:
                                                 <input
                                                     checked={displayLstmForecasts}
                                                     onChange={() =>
@@ -224,6 +243,7 @@ function Sensors()
                                         </Row>
 
                                         <ForecastChart
+                                            lastFiveMeasurements = { lastFiveMeasurements }
                                             lstmForecats={lstmForecasts}
                                             biLstmForecasts={biLstmForecasts}
                                         />

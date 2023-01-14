@@ -27,14 +27,17 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
 
     lastFiveMeasurements.forEach((measure) =>
     {
-        lstmForecastsArr.push({ x: new Date(measure.time),y: measure.Rn })
-        biLstmForecastsArr.push({ x: new Date(measure.time),y: measure.Rn })
+        lstmForecastsArr.push({
+            x: new Date(measure.time),y: measure.Rn })
+        biLstmForecastsArr.push({
+            x: new Date(measure.time),y: measure.Rn })
     })
 
     lstmForecats.forEach((measure, index) =>
     {
         let newDate = lstmLastHour.setTime(lstmLastHour.getTime() + oneHourInMillisecounds)
-        lstmForecastsArr.push({ x: new Date(newDate), y: limitDecimalsWithoutRounding(measure.LSTM_Forecast,2), })
+
+        lstmForecastsArr.push({x: new Date(newDate), y: limitDecimalsWithoutRounding(measure.LSTM_Forecast,2), })
         lstmForecastsErrors.push({ x: new Date(newDate), y: [limitDecimalsWithoutRounding((measure.LSTM_Forecast - measure.error),2), limitDecimalsWithoutRounding((measure.LSTM_Forecast + measure.error),2 )]})
     })
 
@@ -42,12 +45,12 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
     {
         let newDate = biLstmLastHour.setTime(biLstmLastHour.getTime() + oneHourInMillisecounds)
 
-        biLstmForecastsArr.push({ x: new Date(newDate), y: limitDecimalsWithoutRounding(measure.biLSTM_Forecast,2)})
-        biLstmForecastsErrors.push({ x: new Date(newDate), y: [limitDecimalsWithoutRounding((measure.biLSTM_Forecast - measure.error),2), limitDecimalsWithoutRounding(( measure.biLSTM_Forecast + measure.error),2)] })
+        biLstmForecastsArr.push({
+            x: new Date(newDate), y: limitDecimalsWithoutRounding(measure.biLSTM_Forecast,2)})
+        biLstmForecastsErrors.push({
+            x: new Date(newDate), y: [limitDecimalsWithoutRounding((measure.biLSTM_Forecast - measure.error),2), limitDecimalsWithoutRounding(( measure.biLSTM_Forecast + measure.error),2)] })
 
     })
-
-
 
     const options = {
         animationEnabled: true,
@@ -55,28 +58,23 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
             text: "Radon concentration forecast for the next 6 hours"
         },
         axisX: {
-            valueFormatString: "hh:mm TT" ,
+            valueFormatString: "DD-MM-YY HH:mm" ,
             interval: 1,
             titleWrap : true,
         },
         axisY: {
-            title: "Concentration levels",
-        },
-        axisY2: {
-            title: "Concentration levels 2",
-
+            title: "Radon concentration levels",
         },
         toolTip: {
             shared: true,
             animationEnabled: true,
-            content: "jamaes"
         },
         data: [
             {
 
                 type: "spline",
                 color: RNHEALT_GRAPE_PURPLE,
-                name: "Radon gas level",
+                name: "Radon gas level for the LSTM chart",
                 showInLegend: true,
                 toolTipContent: "<b>{label}</b><span style=\"color:#591f50\">{name}</span>: {y} Bq/m³",
                 dataPoints: lstmForecastsArr,
@@ -88,7 +86,7 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
             {
                 type: "rangeSplineArea",
                 color: "red",
-                name: "LSTM error range of the forecast",
+                name: "LSTM error range of the forecast for the Bi LSTM chart",
                 showInLegend: true,
                 toolTipContent: "<span style=\"color:red\">{name} </span>: {y[0]} - {y[1]} Bq/m³",
                 dataPoints: lstmForecastsErrors,

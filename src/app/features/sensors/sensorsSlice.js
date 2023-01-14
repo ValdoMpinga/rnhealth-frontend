@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-
 const initialState =
 {
     isSensorSelected: false,
+    selectedSensor: '',
     hoursToForecast: {
         hour1: true,
         hour2: true,
@@ -12,28 +12,34 @@ const initialState =
         hour5: true,
         hour6: true,
     },
-    algorithmsNames: [
-        { name: 'Algorithms' },
-        { name: 'LSTM' },
+    algorithmsNames:
+        [
 
-    ],
+            { name: 'Algorithms' },
+            { name: 'LSTM' },
+
+        ],
     lstmForecasts: [],
     biLstmForecasts: [],
     displayLstmForecasts: true,
     displayBiLstmForecasts: false,
-    isFetchingForecasts: true,
-    isLoadingSpinnerOn: true,
-
+    isFetchingForecasts: false,
+    isLoadingSpinnerOn: false,
+    isDataFetched: false
 }
 
 export const sensorsSlice = createSlice(
-{
+    {
         name: 'sensors',
         initialState,
         reducers: {
             setIsSensorSelected: (state) =>
             {
                 state.isSensorSelected = !initialState.isSensorSelected
+            },
+            setSelectedSensor: (state, action) =>
+            {
+                state.selectedSensor = action.payload
             },
             setHoursToForecast: (state, action) =>
             {
@@ -63,11 +69,13 @@ export const sensorsSlice = createSlice(
             {
                 state.displayBiLstmForecasts = action.payload
             },
-
-
+            setIsDataFetched: (state, action) =>
+            {
+                state.isDataFetched = action.payload
+            },
         },
     }
 )
 
-export const { setIsSensorSelected, setHoursToForecast, setLstmForecasts, setIsFetchingForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts, setDisplayLstmForecasts, setDisplayBiLstmForecasts } = sensorsSlice.actions
+export const { setIsSensorSelected, setHoursToForecast, setLstmForecasts, setIsFetchingForecasts, setIsLoadingSpinnerOn, setBiLstmForecasts, setDisplayLstmForecasts, setDisplayBiLstmForecasts, setSelectedSensor, setIsDataFetched } = sensorsSlice.actions
 export default sensorsSlice.reducer

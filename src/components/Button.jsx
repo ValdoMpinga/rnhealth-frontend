@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/components/Button.css'
 
-function Button({ color, name, width, height ,isDesabled})
+function Button({ color, name, width, height ,isDesabled,handleButtonClick})
 {
   return (
     <>
@@ -11,7 +11,9 @@ function Button({ color, name, width, height ,isDesabled})
           backgroundColor: color,
           width: width,
           height: height,
+          
         }}
+        onClick={handleButtonClick}
       >
         {name}
       </button>

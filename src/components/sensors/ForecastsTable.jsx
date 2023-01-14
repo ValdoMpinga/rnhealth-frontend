@@ -6,8 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { ClassNames } from '@emotion/react';
-
 
 function ForecastsTable({ algorithms, measurements })
 {
@@ -47,7 +45,7 @@ function ForecastsTable({ algorithms, measurements })
                                     {measure.hour}
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    {limitDecimalsWithoutRounding(measure.LSTM_Forecast,2) + " Bq/m³"}
+                                    {limitDecimalsWithoutRounding(measure.LSTM_Forecast, 2) + " Bq/m³"}
                                 </TableCell>
                                 {/* <TableCell component="th" scope="row">
                                     {measure.ARIMA_Forecast + " Bq/m³"}
@@ -60,7 +58,7 @@ function ForecastsTable({ algorithms, measurements })
                     }
                 </Table>
             </TableContainer>
-    
+
 
         </div >
     )

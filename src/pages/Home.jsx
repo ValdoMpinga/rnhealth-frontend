@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import rnprobeImg from '../assets/images/RnProbe.jpg'
 import '../styles/main.css'
 import Button from '../components/Button';
-import RnColors from '../utils/Constants';
+import {RNHEALT_GRAPE_PURPLE,RNHEALT_BLACK} from '../utils/Constants';
 function Home() {
   return (
       <div
@@ -32,7 +32,7 @@ function Home() {
                                   <Button
                                       className=''
                                       name="Register"
-                                      color={RnColors.rnhealthGrapePurple}
+                                      color={RNHEALT_GRAPE_PURPLE}
                                       width='200px'
                                       height='50px'
                                   />
@@ -40,7 +40,7 @@ function Home() {
                               <Col>
                                   <Button
                                       name="More Info"
-                                      color={RnColors.rnhealthBlack}
+                                      color={RNHEALT_BLACK}
                                       width='200px'
                                       height='50px'
                                   />

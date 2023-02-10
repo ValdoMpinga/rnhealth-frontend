@@ -86,7 +86,7 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
             {
                 type: "rangeSplineArea",
                 color: "red",
-                name: "LSTM error range of the forecast for the Bi LSTM chart",
+                name: "LSTM forecast error range",
                 showInLegend: true,
                 toolTipContent: "<span style=\"color:red\">{name} </span>: {y[0]} - {y[1]} Bq/m³",
                 dataPoints: lstmForecastsErrors,
@@ -97,7 +97,7 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
             {
                 type: "spline",
                 color: RNHEALTH_LIGHT_PLUM,
-                name: "Radon gas level",
+                name: "Radon gas level for the Bidirectional LSTM chart",
                 showInLegend: true,
                 toolTipContent: "<b>{label}</b><span style=\"color:#a54a96\">{name} </span>: {y} Bq/m³",
                 dataPoints: biLstmForecastsArr,
@@ -109,7 +109,7 @@ function ForecastChart({ lstmForecats, biLstmForecasts, lastFiveMeasurements })
             {
                 type: "rangeSplineArea",
                 color: "red",
-                name: " BI LSTM error range of the forecast",
+                name: " Bidirectional LSTM forecasr error range",
                 showInLegend: true,
                 toolTipContent: "<span style=\"color:red\">{name}</span>: {y[0]} - {y[1]} Bq/m³",
                 dataPoints: biLstmForecastsErrors,

@@ -72,19 +72,7 @@ function Sensors()
             dispatch(setIsFetchingForecasts(true))
             dispatch(setIsLoadingSpinnerOn(true))
 
-            backendApi.post('/forecast/hours',
-                {
-                    "hour1": hoursToForecast.hour1,
-                    "hour2": hoursToForecast.hour2,
-                    "hour3": hoursToForecast.hour3,
-                    "hour4": hoursToForecast.hour4,
-                    "hour5": hoursToForecast.hour5,
-                    "hour6": hoursToForecast.hour6,
-                }
-            ).then((res) =>
-            {
-                if (res.status === 200)
-                {
+    
 
                     let parsedCurrentDate = date.toDate().getTime().toString()
                     let parsedStartDate = (parseInt(date.toDate().getTime()) - TWENTY_HOURS_IN_MILISECOUNDS).toString()
@@ -152,8 +140,6 @@ function Sensors()
                                 )
                         }
                         )
-                }
-            })
         }
 
 
